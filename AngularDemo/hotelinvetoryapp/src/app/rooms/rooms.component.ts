@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { Room, RoomList } from './rooms';
+import { HeaderComponent } from './header/header.component';
 
 @Component({
   selector: 'hinv-rooms',
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss'],
 })
-export class RoomsComponent implements OnInit {
+export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterViewChecked {
   hotelName = 'Jilton Jotel';
   numberOfRooms = 10;
   hideRooms = false;
@@ -19,10 +20,16 @@ export class RoomsComponent implements OnInit {
     bookedRooms: 5,
   };
 
+  title = 'Room List';
+  
   roomList: RoomList[] = [];
+
+  @ViewChild(HeaderComponent, {static: true}) headerComponent!: HeaderComponent;
+
   constructor() {}
 
   ngOnInit(): void {
+    // console.log(this.headerComponent)
     this.roomList = [
       {
       roomNumber: 1,
@@ -72,11 +79,41 @@ export class RoomsComponent implements OnInit {
     ];
   }
 
+  ngDoCheck(): void {
+    console.log("on changes is called");
+  }
+
+  ngAfterViewInit(): void {
+    // console.log(this.headerComponent)
+    // this.headerComponent.title = "Rooms View";
+  }
+
+    ngAfterViewChecked(): void {
+      this.headerComponent.title = "Rooms Views";
+    }
+
   toggle() {
     this.hideRooms = !this.hideRooms;
+    this.title = "Rooms List";
   }
 
   selectRoom(room: RoomList) {
     this.selectedRoom = room;
+  }
+
+  addRoom() {
+    const room: RoomList = {
+      roomNumber: 54,
+      roomType: 'economy',
+      amenities: 'Air Conditioner, Free Wi-Fi, TV',
+      price: 100,
+      photos:'https://unsplash.com/photos/white-bed-linen-on-bed-_Swg04CP0bU',
+      checkinTime: new Date('11-Nov-2023'),
+      checkoutTime: new Date('13-Nov-2023'),
+      rating: 1
+
+    };
+    // this.roomList.push(room);
+    this.roomList = [...this.roomList, room]
   }
 }
