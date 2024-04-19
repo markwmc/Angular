@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Room, RoomList } from './rooms';
 import { HeaderComponent } from './header/header.component';
 
@@ -12,7 +12,7 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   numberOfRooms = 10;
   hideRooms = false;
 
-  selectedRoom!: RoomList
+  selectedRoom!: RoomList;
 
   rooms: Room = {
     totalRooms: 20,
@@ -23,9 +23,10 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   title = 'Room List';
   
   roomList: RoomList[] = [];
+// , {static: true}
+  @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
 
-  @ViewChild(HeaderComponent, {static: true}) headerComponent!: HeaderComponent;
-
+  @ViewChildren(HeaderComponent) headerChildrenComponent!: QueryList<HeaderComponent>;
   constructor() {}
 
   ngOnInit(): void {
@@ -85,12 +86,14 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
 
   ngAfterViewInit(): void {
     // console.log(this.headerComponent)
-    // this.headerComponent.title = "Rooms View";
+     this.headerComponent.title = "Rooms View";
+     console.log(this.headerChildrenComponent);
+     this.headerChildrenComponent.last.title = "Last Title";
   }
 
-    ngAfterViewChecked(): void {
-      this.headerComponent.title = "Rooms Views";
-    }
+  ngAfterViewChecked(): void {
+      // this.headerComponent.title = "Rooms Views";
+  }
 
   toggle() {
     this.hideRooms = !this.hideRooms;
